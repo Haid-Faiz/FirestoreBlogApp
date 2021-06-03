@@ -1,4 +1,4 @@
-package com.example.firestoreblog.model
+package com.example.socialland.model
 
 data class User(val uid: String="",
                 val displayName: String?="",

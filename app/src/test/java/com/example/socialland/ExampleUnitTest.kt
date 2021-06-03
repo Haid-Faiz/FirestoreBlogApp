@@ -1,4 +1,4 @@
-package com.example.firestoreblog
+package com.example.socialland
 
 import org.junit.Test
 

@@ -1,14 +1,9 @@
-package com.example.firestoreblog.daos
+package com.example.socialland.repository
 
-import android.content.Intent
 import android.net.Uri
-import android.view.MenuItem
 import android.view.View
-import androidx.appcompat.widget.PopupMenu
-import androidx.recyclerview.widget.RecyclerView
-import com.example.firestoreblog.R
-import com.example.firestoreblog.model.Post
-import com.example.firestoreblog.model.User
+import com.example.socialland.model.Post
+import com.example.socialland.model.User
 import com.google.android.gms.tasks.Task
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.ktx.auth
@@ -23,7 +18,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 
-class PostDao {
+class PostRepo {
 
     val db: FirebaseFirestore = FirebaseFirestore.getInstance()
     val postCollection = db.collection("posts")
@@ -37,7 +32,7 @@ class PostDao {
     fun addPost(textInput: String, imageUri: Uri) {
 
         GlobalScope.launch(Dispatchers.IO) {
-            val userDao = UserDao()
+            val userDao = UserRepo()
             val task = userDao.getUser(currentUserID)
             // Now, as it is a task so we need to add complete listener to it... but
             // here we will use await() method of CoRoutine
@@ -107,10 +102,10 @@ class PostDao {
 
         GlobalScope.launch(Dispatchers.IO) {
 
-            val currentPost: Post? =
-                postCollection.document(postID).get().await().toObject(Post::class.java)
+            val currentPost: Post =
+                postCollection.document(postID).get().await().toObject(Post::class.java)!!
 
-            val isMatched = currentPost!!.createdBy.uid.equals(currentUserID)
+            val isMatched = currentPost.createdBy.uid.equals(currentUserID)
 
             if (isMatched) {
                 postCollection.document(postID).delete()

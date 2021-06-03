@@ -1,18 +1,18 @@
-package com.example.firestoreblog.views
+ package com.example.socialland.views
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.widget.Button
 import android.widget.ProgressBar
-import com.example.firestoreblog.R
-import com.example.firestoreblog.daos.UserDao
-import com.example.firestoreblog.model.User
+import com.example.socialland.R
+import com.example.socialland.repository.UserRepo
+import com.example.socialland.model.User
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.google.android.gms.common.SignInButton
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
@@ -30,7 +30,7 @@ class SignInActivity : AppCompatActivity() {
 
     private val SIGN_IN_CODE: Int = 123
     private lateinit var googleSignInClient: GoogleSignInClient
-    lateinit var btn: SignInButton
+    lateinit var btn: Button
     lateinit var progress: ProgressBar
     private lateinit var auth: FirebaseAuth
 
@@ -46,6 +46,8 @@ class SignInActivity : AppCompatActivity() {
                 .build()
         googleSignInClient = GoogleSignIn.getClient(this, gso)
 
+//        googleSignInClient.signOut()
+
         progress = findViewById(R.id.progress_bar)
         btn = findViewById(R.id.google_signin_button)
         btn.setOnClickListener {
@@ -60,6 +62,11 @@ class SignInActivity : AppCompatActivity() {
     }
 
     private fun signIn() {
+
+        // clearing previous signin caches
+        googleSignInClient.signOut()
+
+        //getting the google signin intent
         val signInIntent = googleSignInClient.signInIntent      // getSignInInIntent()
         startActivityForResult(signInIntent, SIGN_IN_CODE)
     }
@@ -90,6 +97,7 @@ class SignInActivity : AppCompatActivity() {
         progress.visibility = View.VISIBLE
 
         GlobalScope.launch(Dispatchers.IO) {
+
             auth.signInWithCredential(credential).await()
             val firebaseUser = auth.currentUser
 
@@ -101,13 +109,11 @@ class SignInActivity : AppCompatActivity() {
         }
     }
 
-
     private fun updateUI(firebaseUser: FirebaseUser?) {
         if (firebaseUser != null) {
 
             val user = User(firebaseUser.uid, firebaseUser.displayName, firebaseUser.photoUrl.toString())
-
-            val userDao = UserDao()
+            val userDao = UserRepo()
             userDao.addUser(user)
             startActivity(Intent(this, MainActivity::class.java))
             finish()

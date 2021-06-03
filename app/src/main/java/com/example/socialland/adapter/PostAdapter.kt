@@ -1,4 +1,4 @@
-package com.example.firestoreblog.adapter
+package com.example.socialland.adapter
 
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -11,9 +11,9 @@ import androidx.appcompat.widget.PopupMenu
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.firestoreblog.R
-import com.example.firestoreblog.Utils
-import com.example.firestoreblog.model.Post
+import com.example.socialland.R
+import com.example.socialland.Utils
+import com.example.socialland.model.Post
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
 import com.google.firebase.auth.ktx.auth
@@ -35,7 +35,6 @@ class PostAdapter(
             clickListenerListener.onLikeClicked(snapshots.getSnapshot(viewHolder.adapterPosition).id)
         }
         viewHolder.menuButton.setOnClickListener {
-
 
             // this popup menu needs to be tied to a view
             val popupMenu: PopupMenu = PopupMenu(it.context, it)
@@ -92,10 +91,8 @@ class PostAdapter(
             )
         }
 
-        if (isVisible)
-            holder.menuButton.visibility = View.VISIBLE
-        else
-            holder.menuButton.visibility = View.GONE
+        if (isVisible) holder.menuButton.visibility = View.VISIBLE
+        else holder.menuButton.visibility = View.GONE
     }
 
     inner class PostViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

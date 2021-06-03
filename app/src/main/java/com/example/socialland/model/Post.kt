@@ -1,4 +1,4 @@
-package com.example.firestoreblog.model
+package com.example.socialland.model
 
 class Post(
     val textInput: String = "",
